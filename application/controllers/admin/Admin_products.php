@@ -35,8 +35,8 @@ class Admin_products extends CI_Controller {
 
 	}//END: edit()
 
-	private function done_edit($data){
-		if($data){
+	private function done_edit($item_p){
+		if($item_p){
 			if($_FILES["images"]["name"][0]){
 				$this->load->library('Upload_multiply');
 				if($this->upload_multiply->do_multi_upload("images","123444")){
@@ -44,7 +44,7 @@ class Admin_products extends CI_Controller {
 						$object[]=array(
 							"id_image"=>null,
 							"image"=>$value["file_name"],
-							"pid"=>$data["pid"],
+							"pid"=>$item_p["pid"],
 							);
 					}//END: foreach
 					$this->db->insert_batch(PREFIX_DB.'images', $object);
@@ -52,41 +52,25 @@ class Admin_products extends CI_Controller {
 				}//END: If do_multi_upload();
 			}//END: upload file images
 
-			//$this->db->where('delete_flag', 0); //Thêm vào database
-			$this->db->where('pid', $data["pid"]);
-			$images=$this->db->get(PREFIX_DB.'images')->result();
-			$i=0;
-			foreach ($images as $key => $value) {
-				if($value->main_img==1){
-					$i++;
-				}
+			if($this->_check_once_main_img($item_p["pid"])){
+				//Check images has 1 row is main_img 			
 			}
-			if($i!=1){
-				$this->db->where('pid', $data["pid"]);
-				$object=array("main_img"=>0);
-				$this->db->update(PREFIX_DB.'images', $object);
-				$this->db->where('id_image', $images[0]->id_image);
-				$this->db->where('pid', $data["pid"]);
-				$object=array("main_img"=>1);
-				$this->db->update(PREFIX_DB.'images', $object);
-			}
-			
 
 			$object=array(
-				"idcode"=>$data["idcode"],
-				"cid"=>$data["cid"],
-				"is_home"=>$data["is_home"],
-				"is_public"=>$data["is_public"],
-				"price_market"=>$data["price_market"],
-				"price"=>$data["price"]
+				"idcode"=>$item_p["idcode"],
+				"cid"=>$item_p["cid"],
+				"is_home"=>$item_p["is_home"],
+				"is_public"=>$item_p["is_public"],
+				"price_market"=>$item_p["price_market"],
+				"price"=>$item_p["price"]
 				);
 
-			$this->db->where('pid', $data["pid"]);
+			$this->db->where('pid', $item_p["pid"]);
 			if(!$this->db->update(PREFIX_DB.'shop', $object)) return false;
 			$object=array(
-				"title"=>$data["title"]
+				"title"=>$item_p["title"]
 				);
-			$this->db->where('pid', $data["pid"]);
+			$this->db->where('pid', $item_p["pid"]);
 			$this->db->where('lang_id', 1);
 			if(!$this->db->update(PREFIX_DB.'shop_lang', $object)) return false;
 			return true;
@@ -95,6 +79,33 @@ class Admin_products extends CI_Controller {
 		}
 	}//END: done_edit()
 
+	/**
+	 * _check_once_main_img
+	 * @todo Check images has 1 row is main_img
+	 * @return boolean true:No have main_img || false: Have main_img
+	 * @author 
+	 **/
+	private function _check_once_main_img($pid){
+			$this->db->where('pid', $pid);
+			$images=$this->db->get(PREFIX_DB.'images')->result();
+			$i=0;
+			foreach ($images as $key => $value) {
+				if($value->main_img==1){
+					$i++;
+				}
+			}
+			if($i!=1){
+				$this->db->where('pid', $pid);
+				$object=array("main_img"=>0);
+				$this->db->update(PREFIX_DB.'images', $object);
+				$this->db->where('id_image', $images[0]->id_image);
+				$this->db->where('pid', $pid);
+				$object=array("main_img"=>1);
+				$this->db->update(PREFIX_DB.'images', $object);
+				return true;
+			}
+			return false;
+	}//END: _check_once_main_img()
 }
 /* End of file admin_products.php */
 /* Location: ./application/controllers/admin/admin_products.php */

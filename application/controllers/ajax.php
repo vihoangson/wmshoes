@@ -36,6 +36,29 @@ class Ajax extends CI_Controller {
 			break;
 		}
 	}//END: delete_img_p()
+
+	public function set_main_img(){
+		$id=$this->input->post('id');
+		if(!$id) return;
+
+		$this->db->where('id_image', $id);
+		$rs=$this->db->get(PREFIX_DB.'images')->result();
+
+		$this->db->where('pid', $rs[0]->pid);
+		$object=array("main_img"=>"0");
+		if(!$this->db->update(PREFIX_DB.'images', $object)){
+		}
+
+		$this->db->where('id_image', $id);
+		$object=array("main_img"=>"1");
+		if($this->db->update(PREFIX_DB.'images', $object)){
+			echo "1";
+		}else{
+			echo "0";
+		}
+	}//END: set_main_img()
+
+
 }//END: Class Ajax
 
 /* End of file ajax.php */

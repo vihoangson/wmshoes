@@ -52,22 +52,29 @@
 		<label class="" for="">Hình ảnh sản phầm</label>
 		<input type="file" class="form-control"  name="images[]" multiple>
 	</div>
-	<?php 
-	//$this->db->where('delete_flag', 0); //Thêm vào database
-	$this->db->where('pid', $item->pid);
-	$images=$this->db->get(PREFIX_DB.'images')->result();
-	$flag_create_img=true;
-	foreach ($images as $key => $value) {
-		if($value->main_img==1){
-			$flag_create_img=false;
-		}
-		echo "<div class='ele_img'>".$value->image.' <span class="glyphicon glyphicon-trash delete_img_p" data-id='.$value->id_image.'></span>'."</div>";
-	}
-	if($flag_create_img){
+	<div id="img_border">
+		<?php
 		
-	}
-	 ?>
-	
+		$this->db->where('pid', $item->pid);
+		$images=$this->db->get(PREFIX_DB.'images')->result();
+		$flag_create_img=true;
+		foreach ($images as $key => $value) {
+			echo "
+
+			<div class='ele_img ".($value->main_img==1?"main_img":"")."' data-id='".$value->id_image."'>
+				"."<img src='/wmshoes/public/tmp/".$value->image."'>".' 
+				<p>
+					<span class="glyphicon glyphicon-trash delete_img_p" data-id='.$value->id_image.'></span>
+					<span class="glyphicon glyphicon-star set_main_img_p" data-id='.$value->id_image.'></span>
+				</p>
+				'."
+			</div>
+
+			";
+		}
+		?>
+	</div>
+	<div class="clearfix"></div>
 	<div class="form-group">
 		<label class="" for="">Mã sản phẩm</label>
 		<input type="text" value="<?php echo $item->idcode ?>" class="form-control" id="" placeholder="Input field" name="idcode">

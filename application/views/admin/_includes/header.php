@@ -16,27 +16,41 @@
 			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
 		<style>
-#button_hidden_debug{
+			.ele_img.main_img img {
+				border: 10px solid #FFB0B0;
+			}
+			.ele_img {
+				float: left;
+				width: 185px;
+			}
 
-}
-.hidden_debug {
-	display: none;
-	position: absolute;
-	top:0;
-	left:0;
-}
-.hidden_debug pre{
-	opacity: 0.8;
-}
-#button_hidden_debug {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-.pagination-box > * {
-    padding: 7px;
-    background: #F7F7F9;
-}
+			.ele_img img {
+				width: 128px !important;
+			}
+			.ele_img .glyphicon{
+				cursor: pointer;
+				font-size: 20px;
+			}
+			#button_hidden_debug{
+			}
+			.hidden_debug {
+				display: none;
+				position: absolute;
+				top:0;
+				left:0;
+			}
+			.hidden_debug pre{
+				opacity: 0.8;
+			}
+			#button_hidden_debug {
+				position: absolute;
+				top: 0;
+				right: 0;
+			}
+			.pagination-box > * {
+				padding: 7px;
+				background: #F7F7F9;
+			}
 		</style>
 	</head>
 	<body>
